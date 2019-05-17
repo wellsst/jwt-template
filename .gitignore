@@ -85,3 +85,9 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+.gradle/buildOutputCleanup/built.bin
+.gradle/buildOutputCleanup/cache.properties
+.gradle/buildOutputCleanup/cache.properties.lock
+.idea/misc.xml
+.idea/vcs.xml
+/.idea/

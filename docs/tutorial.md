@@ -122,14 +122,68 @@ Add the loginRequestEmail.gsp its just a template
 
 ## Client side
 
+cd client/
+
+// User will enter their email and click request:
+ng g c login
+
+ng g c login-email-sent
+
+ng g c request-jwt
+
+ng g c welcome
+
+ng g s auth
+
+npm install moment --save
+
+npm install --save @angular/material @angular/cdk @angular/animations
+(https://material.angular.io/guide/getting-started)
+
+- or -
+
+https://www.primefaces.org/primeng/#/
+
+Add the Inteceptors
+
+app.module.ts:
+
+```typescript
+import {
+  MatFormFieldModule,
+...
+  MatDialogModule, MatBadgeModule, MatExpansionModule,
+  MatSelectModule,
+  MatTabsModule
+
+} from '@angular/material';
+```
+
+```typescript
+providers: [
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    AuthGuard,
+    AuthService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+}
+``` 
+
+```typescript
+const appRoutes: Routes = [
+  {path: '', component: WelcomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'login-email-sent', component: LoginEmailSentComponent},
+}
+
+@NgModule({ ...
+
+```
 
 
+Start all this up locally:
 
-
-
-
-
-
+./gradlew bootRun --parallel
 
 
 

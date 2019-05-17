@@ -1,5 +1,7 @@
 package jwt.template
 
+import org.springframework.http.HttpStatus
+
 class LoginController {
 	static responseFormats = ['json', 'xml']
     String serverURL = grailsApplication.config.getProperty("grails.serverURL")
@@ -93,7 +95,7 @@ class LoginController {
         }
     }
 
-    def signup() {
+    /*def signup() {
         String emailAddress = request.JSON.emailAddress
         log.info "Signup request from user: ${emailAddress}"
 
@@ -135,17 +137,17 @@ class LoginController {
                 }
                 ctx.complete()
             }
-            /*p.onError { Throwable err ->
+            *//*p.onError { Throwable err ->
                 println "An error occured ${err.message}"
             }
             p.onComplete { result ->
                 println "Promise returned $result"
-            }*/
+            }*//*
 
-            /*Map response = [username: emailAddress, password:password]
-            respond response*/
+            *//*Map response = [username: emailAddress, password:password]
+            respond response*//*
             respond token: token
         }
 
-    }
+    }*/
 }

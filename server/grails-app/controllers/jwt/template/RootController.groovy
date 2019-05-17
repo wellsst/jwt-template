@@ -22,7 +22,6 @@ class RootController {
         // use this in your app code
         SecretKey secretKey = Keys.hmacShaKeyFor(secretBytes);
 
-
         //def keyString = Keys.secretKeyFor(SignatureAlgorithm.HS256)
         log.info(base64Key)
         render base64Key

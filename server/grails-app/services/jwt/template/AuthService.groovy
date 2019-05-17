@@ -2,6 +2,7 @@ package jwt.template
 
 import auth.AuthException
 import grails.gorm.transactions.Transactional
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 
