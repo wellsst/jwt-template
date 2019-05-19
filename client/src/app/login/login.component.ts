@@ -5,6 +5,7 @@ import {ErrorStateMatcher} from '@angular/material/core';
 
 import {AuthService} from '../auth.service';
 import {MatSnackBar} from '@angular/material';
+import {first} from "rxjs/operators";
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -81,13 +82,12 @@ export class LoginComponent implements OnInit {
   signupRequest() {
     this.loading = true;
     this.authenticationService.signupRequest(this.model.email)
+      .pipe(first())
       .subscribe(result => {
-        if (result.status === "OK") {
           // login successful
           console.log('Login request ok user is: ' + this.authenticationService.username);
           // this.router.navigate(['/view-history']);
           this.router.navigate(['/login-email-sent']);
-        }
       }, error => {
         this.loading = false;
         this.openSnackBar(error.error + '', '');

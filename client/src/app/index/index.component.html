@@ -6,12 +6,30 @@
 
 <div id="content" role="main">
   <section class="container colset-2-its">
-    <h1 style="text-align:center;">Welcome to Grails</h1>
+    <h1 style="text-align:center;">JWT Template/Demo</h1>
 
     <p>
-      Congratulations, you have successfully started your first Grails application! At the moment
-      this is the default page, feel free to modify it to either redirect to a controller or display
-      whatever content you may choose. Below is a list of controllers that are currently deployed in
+      This is a demo or tutorial of using Java Web Tokens for authentication. Angular in the front end and Grails in the
+      backend.
+
+      The basic steps for the user are:
+    </p>
+
+    <ol>
+      <li>Go to the <a href="http://localhost:4200/login">Signup page</a></li>
+      <li>Enter their email address. This will send them a short lived unique URL</li>
+      <li>User gets the email and click on the link</li>
+      <li>This will generate their secure JWT which will be sent to their browser and stored there</li>
+      <li>Each request that needs a JWT the browser must send it to the server</li>
+      <li>The server will be able to authenticate and authorise based on the JWT given</li>
+    </ol>
+
+    <p>
+      <a href="http://localhost:4200/login">Signup for the demo here</a>
+    </p>
+
+    <p>
+      Below is a list of controllers that are currently deployed in
       this application, click on each to execute its default action:
     </p>
 
@@ -35,7 +53,8 @@
       <img src="../../images/advancedgrails.svg" alt="Grails Guides" class="float-left"/>
     </a>
     <strong class="centered"><a href="http://guides.grails.org" target="_blank">Grails Guides</a></strong>
-    <p>Building your first Grails app? Looking to add security, or create a Single-Page-App? Check out the <a href="http://guides.grails.org" target="_blank">Grails Guides</a> for step-by-step tutorials.</p>
+    <p>Building your first Grails app? Looking to add security, or create a Single-Page-App? Check out the <a
+      href="http://guides.grails.org" target="_blank">Grails Guides</a> for step-by-step tutorials.</p>
 
   </div>
   <div class="col">
@@ -43,7 +62,8 @@
       <img src="../../images/documentation.svg" alt="Grails Documentation" class="float-left"/>
     </a>
     <strong class="centered"><a href="http://docs.grails.org" target="_blank">Documentation</a></strong>
-    <p>Ready to dig in? You can find in-depth documentation for all the features of Grails in the <a href="http://docs.grails.org" target="_blank">User Guide</a>.</p>
+    <p>Ready to dig in? You can find in-depth documentation for all the features of Grails in the <a
+      href="http://docs.grails.org" target="_blank">User Guide</a>.</p>
 
   </div>
 
@@ -52,6 +72,7 @@
       <img src="../../images/slack.svg" alt="Grails Slack" class="float-left"/>
     </a>
     <strong class="centered"><a href="https://grails-slack.cfapps.io" target="_blank">Join the Community</a></strong>
-    <p>Get feedback and share your experience with other Grails developers in the community <a href="https://grails-slack.cfapps.io" target="_blank">Slack channel</a>.</p>
+    <p>Get feedback and share your experience with other Grails developers in the community <a
+      href="https://grails-slack.cfapps.io" target="_blank">Slack channel</a>.</p>
   </div>
 </footer>

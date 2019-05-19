@@ -23,6 +23,6 @@ E.g., from the `client` directory, start the client application: `npm start`
 ## Inspired by
 
 * http://www.devglan.com/spring-security/angular-jwt-authentication
-* http://jasonwatmore.com/post/2016/08/16/angular-2-jwt-authentication-example-tutorial
+* https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial
 * https://medium.com/@ryanchenkie_40935/angular-authentication-using-the-http-client-and-http-interceptors-2f9d1540eb8
 * https://theinfogrid.com/tech/developers/angular/refreshing-authorization-tokens-angular-6/

@@ -13,6 +13,7 @@ const httpOptions = {
 
 /**
  * Derived from http://jasonwatmore.com/post/2016/08/16/angular-2-jwt-authentication-example-tutorial
+ * Updated for angular 7: https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial#auth-guard-ts
  */
 @Injectable({
   providedIn: 'root',
