@@ -31,9 +31,9 @@ export class AuthService {
   }
 
 
-  signupRequest(username: string): Observable<Object> {
-    return this.http.post(environment.serverUrl + '/signupRequest/',
-      JSON.stringify({username: username}), httpOptions); // .shareReplay();
+  signupRequest(emailAddress: string): Observable<Object> {
+    return this.http.post(environment.serverUrl + 'signupRequest/',
+      JSON.stringify({emailAddress: emailAddress}), httpOptions); // todo: should not need httpOptions here use the inteceptor
   }
 
   /* requestJWT(loginId: string) {

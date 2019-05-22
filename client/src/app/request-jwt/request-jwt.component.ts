@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../auth.service';
-import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-request-jwt',
@@ -12,8 +11,7 @@ export class RequestJWTComponent implements OnInit {
   jwt: string;
   loading = false;
 
-  constructor(public snackBar: MatSnackBar,
-              private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
               private router: Router,
               private authenticationService: AuthService) {
     this.route.queryParams.subscribe(params => {
@@ -46,10 +44,6 @@ export class RequestJWTComponent implements OnInit {
       });*/
   }
 
-  openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 10000,
-    });
-  }
+
 
 }

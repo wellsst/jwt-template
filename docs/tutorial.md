@@ -125,9 +125,9 @@ Add the loginRequestEmail.gsp its just a template
 cd client/
 
 // User will enter their email and click request:
-ng g c login
+ng g c register
 
-ng g c login-email-sent
+ng g c register-email-sent
 
 ng g c request-jwt
 

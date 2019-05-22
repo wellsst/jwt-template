@@ -1,4 +1,4 @@
-package jwt.template
+
 
 class UrlMappings {
 

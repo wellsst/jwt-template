@@ -32,10 +32,10 @@ class LoginController {
     }
 
     def signupRequest() {
-        String username = request.JSON.username
-        log.info "signupRequest: ${username}"
+        String emailAddress = request.JSON.emailAddress
+        log.info "signupRequest: ${emailAddress}"
         try {
-            User user = authService.signupRequest(username)
+            User user = authService.signupRequest(emailAddress)
             respond status: HttpStatus.OK
         } catch (all) {
             respond status: HttpStatus.UNAUTHORIZED

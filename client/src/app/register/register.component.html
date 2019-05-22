@@ -1,0 +1,9 @@
+<form (ngSubmit)="signupRequest()" #signupForm="ngForm">
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" [(ngModel)]="emailAddress" required ngModel email placeholder="Please enter your Email address">
+  </div>
+
+  <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Signup</button>
+</form>

@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {IndexComponent} from './index/index.component';
 import {AppComponent} from './app.component';
@@ -15,54 +14,28 @@ import {AuthInterceptor} from "./AuthInterceptor";
 import {AuthService} from "./auth.service";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AuthGuard} from "./guards/auth.guard";
-import {LoginComponent} from './login/login.component';
-
-import {
-  MatFormFieldModule,
-  MatDatepickerModule, MatNativeDateModule,
-  MatInputModule,
-  MatToolbarModule,
-  MatSidenavModule,
-  MatListModule,
-  MatGridListModule,
-  MatCardModule,
-  MatMenuModule,
-  MatIconModule,
-  MatButtonModule,
-  MatTableModule,
-  MatPaginatorModule,
-  MatSortModule,
-  MatAutocompleteModule,
-  MatSliderModule,
-  MatChipsModule,
-  MatSnackBarModule,
-  MatCheckboxModule,
-  MatProgressBarModule,
-  MatDialogModule, MatBadgeModule, MatExpansionModule,
-  MatSelectModule,
-  MatTabsModule
-
-} from '@angular/material';
-import { LoginEmailSentComponent } from './login-email-sent/login-email-sent.component';
-import { WelcomeComponent } from './welcome/welcome.component';
-import {Routes} from "@angular/router";
+import {WelcomeComponent} from './welcome/welcome.component';
+import {RouterModule, Routes} from "@angular/router";
+import { RegisterComponent } from './register/register.component';
+import { RegisterEmailSentComponent } from './register-email-sent/register-email-sent.component';
 
 const appRoutes: Routes = [
-  {path: '', component: WelcomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'login-email-sent', component: LoginEmailSentComponent}
-  ]
+  {path: '', component: WelcomeComponent, canActivate: [AuthGuard]},
+  {path: 'register', component: RegisterComponent},
+  {path: 'register-email-sent', component: RegisterEmailSentComponent},
+  {path: '**', redirectTo: ''}
+];
 
 
-  @NgModule({
+@NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     IndexComponent,
     RequestJWTComponent,
-    LoginComponent,
-    LoginEmailSentComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    RegisterComponent,
+    RegisterEmailSentComponent
   ],
   imports: [
     BrowserModule,
@@ -71,42 +44,16 @@ const appRoutes: Routes = [
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-
-    // Overkill
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule, MatNativeDateModule,
-    MatSliderModule,
-    MatSnackBarModule,
-    MatChipsModule,
-    MatCheckboxModule,
-    MatProgressBarModule,
-    MatDialogModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatExpansionModule,
-    MatSelectModule,
-    MatTabsModule
+    RouterModule.forRoot(
+      appRoutes,
+      {enableTracing: true} // <-- debugging purposes only
+    ),
   ],
   providers: [
-    {provide: LocationStrategy, useClass: HashLocationStrategy},
     NavService,
-    AuthGuard,
-    AuthService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-    ],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

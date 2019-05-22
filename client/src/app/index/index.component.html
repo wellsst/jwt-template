@@ -16,7 +16,7 @@
     </p>
 
     <ol>
-      <li>Go to the <a href="http://localhost:4200/login">Signup page</a></li>
+      <li>Start with the <a routerLink="/register">Register for JWT auth</a></li>
       <li>Enter their email address. This will send them a short lived unique URL</li>
       <li>User gets the email and click on the link</li>
       <li>This will generate their secure JWT which will be sent to their browser and stored there</li>
@@ -25,7 +25,15 @@
     </ol>
 
     <p>
-      <a href="http://localhost:4200/login">Signup for the demo here</a>
+      <a routerLink="/welcome">
+        <span class="label">You will need to have a valid JWT token to see this page</span>
+      </a>
+    </p>
+
+    <p>
+      <a routerLink="/register">
+        <span class="label">Register for the demo here</span>
+      </a>
     </p>
 
     <p>

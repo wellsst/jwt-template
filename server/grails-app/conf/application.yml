@@ -66,6 +66,18 @@ grails:
 grails:
     cors:
         enabled: true
+
+    serverURL: "http://localhost:8080"
+    mail:
+        host: "smtp.gmail.com"
+        port: 465
+        username: "example_gmail_setup@gmail.com"
+        password: 'secret'
+        props:
+            mail.smtp.auth: "true"
+            mail.smtp.socketFactory.port: "465"
+            mail.smtp.socketFactory.class: "javax.net.ssl.SSLSocketFactory"
+            mail.smtp.socketFactory.fallback: "false"
 ---
 hibernate:
     cache:
