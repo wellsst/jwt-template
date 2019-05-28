@@ -1,5 +1,6 @@
 package jwt.template
 
+import grails.util.Environment
 import org.springframework.http.HttpStatus
 
 class LoginController {
@@ -36,8 +37,9 @@ class LoginController {
         log.info "signupRequest: ${emailAddress}"
         try {
             User user = authService.signupRequest(emailAddress)
-            respond status: HttpStatus.OK
+            respond "testse", status: HttpStatus.OK
         } catch (all) {
+            all.printStackTrace()
             respond status: HttpStatus.UNAUTHORIZED
         }
     }
@@ -54,9 +56,10 @@ class LoginController {
             if (Environment.current == Environment.PRODUCTION) {
                 redirect url: "${serverURL}/#/request-jwt?jwt=${jwtToken}"
             } else {
-                redirect url: "http://localhost:4200/#/request-jwt?jwt=${jwtToken}"
+                redirect url: "http://localhost:4200/request-jwt?jwt=${jwtToken}"
             }
         } catch (all) {
+            all.printStackTrace()
             log.error all.message
             render text: all.message, status: HttpStatus.NOT_FOUND
         }
@@ -82,8 +85,8 @@ class LoginController {
         def user = User.findByUsername(username)
         if (user) {
             def token = UUID.randomUUID().toString()
-            // todo: create a real full JWT token
-            user.token = token
+            // todo: create a real full JWT loginToken
+            user.loginToken = token
             user.save()
             log.info("User logged in ${user}")
             respond token: token
@@ -107,9 +110,9 @@ class LoginController {
             String password = generatePassphrase(wordMap)[0]
 
             User newUser = new User(username: emailAddress, password: password)
-            def token = UUID.randomUUID().toString()
-            // todo: create a real full JWT token
-            newUser.token = token
+            def loginToken = UUID.randomUUID().toString()
+            // todo: create a real full JWT loginToken
+            newUser.loginToken = loginToken
             newUser.save(flush: true)
             Role userRole = Role.findOrSaveByAuthority("ROLE_USER")
             UserRole.create(newUser, userRole, true)
@@ -146,7 +149,7 @@ class LoginController {
 
             *//*Map response = [username: emailAddress, password:password]
             respond response*//*
-            respond token: token
+            respond loginToken: loginToken
         }
 
     }*/

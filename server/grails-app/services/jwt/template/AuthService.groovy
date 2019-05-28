@@ -1,15 +1,18 @@
 package jwt.template
 
 import auth.AuthException
+import grails.compiler.GrailsCompileStatic
 import grails.gorm.transactions.Transactional
+import groovy.time.TimeCategory
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 
 import javax.crypto.SecretKey
 
-@Transactional
-class AuthService {
+// @GrailsCompileStatic
+@Transactional(readOnly = true)
+class AuthService extends BaseService {
 
     EmailService emailService
 
@@ -19,55 +22,59 @@ class AuthService {
 
     def signupRequest(String userEmail) {
         // Lookup user?
-        User existingUser = User.findByUsername(userEmail)
-        if (existingUser) {
+        User user = User.findByUsername(userEmail)
+        if (user) {
             // Already has one?
             log.info "signupRequest: ${userEmail}, already exists"
-            if (existingUser.loginRequestId) {
-                log.info "User ${userEmail} already exists with login link: ${existingUser.loginRequestId}"
-                return existingUser
+            if (user.registrationRequest.requestId) {
+                log.info "User ${userEmail} already exists with login link: ${user.registrationRequest.requestId}"
+                return user
             }
         } else {
             log.info "signupRequest: ${userEmail}, creating as new user"
-            existingUser = new User(username: userEmail)
+            def registrationRequest = new RegistrationRequest()
+            registrationRequest.requestId = UUID.randomUUID() as String
+            registrationRequest.challengeId = RegistrationRequest.generateChallengeId(getAppConfigValue("jwt.challengeKeyLength", 4) as Integer)
+            user = new User(username: userEmail, registrationRequest: registrationRequest)
         }
 
-        // Generate a link if not already one
-        existingUser.loginRequestId = UUID.randomUUID().toString()
-        existingUser.loginRequestedOn = new Date()
-
-        if (!existingUser.validate()) {
-            log.info "${existingUser.errors.allErrors}"
+        // Dev only: Just check for errors
+        if (!user.validate()) {
+            log.info "${user.errors.allErrors}"
         }
 
-        existingUser.save(flush: true)
+        user.save(flush: true)
 
         // Send email
-        String loginLink = emailService.sendLoginRequest(existingUser)
-        log.info "Login link: ${loginLink}, ${existingUser}"
-        existingUser
+        String loginLink = emailService.sendLoginRequest(user)
+        log.info "Login link: ${loginLink}, ${user}"
+        user
     }
 
     /* User has clicked on the email link */
 
     def jwtFromRequestId(String loginRequestId) {
-        User requestingUser = User.findByLoginRequestId(loginRequestId)
-        if (requestingUser) {
-            requestingUser.clearLoginRequest()
+        RegistrationRequest registrationRequest = RegistrationRequest.findByRequestId loginRequestId
 
-            //Key key = Keys.secretKeyFor(SignatureAlgorithm.RS256)
-            SecretKey key = Keys.hmacShaKeyFor((grailsApplication.config.getProperty('jwtKey') as String).bytes);
+        if (registrationRequest) {
+            User requestingUser = registrationRequest.user
+
+            SecretKey key = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes)
             String jwt = Jwts.builder().
-                    setIssuer("circuitShuffle").
+                    setIssuer(getAppConfigValue("jwt.issuer", "jwt-template") as String).
                     setSubject(requestingUser.username).
                     setIssuedAt(new Date()).
-                    setExpiration(new Date() + 365).
+                    setExpiration(new Date() + (getAppConfigValue("jwt.daysToExpire", 365) as Integer)).
                     signWith(key).compact()
-            requestingUser.token = jwt
+            requestingUser.loginToken = jwt
             requestingUser.save(flush: true)
+
+            requestingUser.registrationRequest.delete()
+            /* requestingUser.registrationRequest = null
+*/
             return jwt
         } else {
-            String msg = "User signup attempt but no login token found for ${loginRequestId}"
+            String msg = "User signup attempt but no login loginToken found for ${loginRequestId}"
             throw new AuthException(msg)
         }
     }
@@ -75,8 +82,8 @@ class AuthService {
     def loginFromJWT(String token) {
         /*grailsApplication.config.getProperty('jwtKey')
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256)*/
-        SecretKey key = Keys.hmacShaKeyFor((grailsApplication.config.getProperty('jwtKey') as String).bytes);
-        /*if (Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject().equals(email)) {
+        SecretKey key = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes);
+        /*if (Jwts.parser().setSigningKey(key).parseClaimsJws(loginToken).getBody().getSubject().equals(email)) {
             return
         } else {
             throw new AuthException()
@@ -89,7 +96,7 @@ class AuthService {
             String username = claims.getBody().getSubject()
             User user = User.findByUsername(username, [cache: true])
             if (!user) {
-                throw new AuthException("No user found for token: ${username}")
+                throw new AuthException("No user found for loginToken: ${username}")
             }
             return user
         } catch (JwtException e) {
@@ -98,19 +105,22 @@ class AuthService {
     }
 
     def login(String userEmail, String loginRequest) throws AuthException {
-
-        def user = User.findByUsernameAndLoginRequestId(username, loginRequest)
+        def query = User.where {
+            username == username &&
+                    registrationRequest.requestId == loginRequest
+        }
+        def user = query.find()
         if (user) {
             def token = UUID.randomUUID().toString()
-            // todo: create a real full JWT token
-            user.token = token
+            // todo: create a real full JWT loginToken
+            user.loginToken = token
             user.save()
             log.info("User logged in ${user}")
             user
         }
         /* TODO: Check for expired, locked etc */
         else {
-            def msg = "User login attempt ${userEmail} or no login token found, but user not found, users are: ${User.list(max: 10)}"
+            def msg = "User login attempt ${userEmail} or no login loginToken found, but user not found, users are: ${User.list(max: 10)}"
             log.warn(msg)
             throw new AuthException(msg)
         }
@@ -121,13 +131,10 @@ class AuthService {
     def cleanupOldRequests() {
         Date removeLoginRequestsOlderThan = new Date()
         use(TimeCategory) {
-            removeLoginRequestsOlderThan - 15.minutes
+            removeLoginRequestsOlderThan - 15.minutes // todo: move to config
         }
 
-        List<User> cleanupList = User.findAllByLoginRequestedOnLessThan(removeLoginRequestsOlderThan)
-        cleanupList.each { userToClean ->
-            log.info "Cleaning old login request for user ${userToClean.username}"
-            userToClean.clearLoginRequest()
-        }
+        List<RegistrationRequest> cleanupList = RegistrationRequest.findAllByDateCreatedLessThan(removeLoginRequestsOlderThan)
+        RegistrationRequest.deleteAll(cleanupList)
     }
 }

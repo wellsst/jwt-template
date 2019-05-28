@@ -22,6 +22,7 @@ import { RegisterEmailSentComponent } from './register-email-sent/register-email
 const appRoutes: Routes = [
   {path: '', component: WelcomeComponent, canActivate: [AuthGuard]},
   {path: 'register', component: RegisterComponent},
+  {path: 'request-jwt', component: RequestJWTComponent},
   {path: 'register-email-sent', component: RegisterEmailSentComponent},
   {path: '**', redirectTo: ''}
 ];

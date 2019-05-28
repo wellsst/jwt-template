@@ -16,11 +16,11 @@ class RootController {
         String random = UUID.randomUUID().toString()
 
         // Store this in config
-        String base64Key = DatatypeConverter.printBase64Binary(random.getBytes());
-        byte[] secretBytes = DatatypeConverter.parseBase64Binary(base64Key);
+        String base64Key = DatatypeConverter.printBase64Binary(random.getBytes())
+        byte[] secretBytes = DatatypeConverter.parseBase64Binary(base64Key)
 
         // use this in your app code
-        SecretKey secretKey = Keys.hmacShaKeyFor(secretBytes);
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretBytes)
 
         //def keyString = Keys.secretKeyFor(SignatureAlgorithm.HS256)
         log.info(base64Key)
@@ -35,5 +35,11 @@ class RootController {
         log.info(keyString)
         render keyString
     }
-    
+
+    def listRegReqs() {
+        List<RegistrationRequest> requests = RegistrationRequest.list()
+        log.info requests
+        render requests
+    }
+
 }

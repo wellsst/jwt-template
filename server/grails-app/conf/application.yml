@@ -91,6 +91,13 @@ dataSource:
     username: sa
     password: ''
 
+app:
+    jwt:
+        issuer: jwt-template
+        daysToExpire: 365
+        challengeKeyLength: 5
+        key: NDY2ZGI4N2MtYWMxYi00ZDA2LWFjYjMtNzEzNWQ2MGVmODM1
+
 environments:
     development:
         dataSource:

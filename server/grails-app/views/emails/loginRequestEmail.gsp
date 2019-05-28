@@ -6,7 +6,7 @@
     <title>Login request from CircuitShuffle</title>
 </head>
 <body>
-<p>We received a request for ${email} to log in to the app: 'CircuitShuffle'</p>
+<p>We received a request for ${email} to log in to the app: 'JWT Template'</p>
 <table cellpadding="0" cellspacing="0" border="0">
     %{--<tr>
         <td>

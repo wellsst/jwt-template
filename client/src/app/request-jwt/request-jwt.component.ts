@@ -18,6 +18,7 @@ export class RequestJWTComponent implements OnInit {
       this.jwt = params['jwt'];
       //this.expiresIn = params['expiresIn'];
       console.log('JWT: ' + this.jwt);
+
     });
   }
 

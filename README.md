@@ -1,5 +1,5 @@
 # jwt-template
-JWT by example with Grails, Angular and a peppering of GraphML
+JWT by example/starter template with Grails, Angular
 
 ## Starting up
 
@@ -14,6 +14,17 @@ Run the frontend e2e and grails integration tests: `./gradlew integrationTest`
 
 Node.js/npm is not required when using the Gradle tasks above, but is supported if installed.
 E.g., from the `client` directory, start the client application: `npm start`
+
+## Getting started
+
+After startup go to: http://localhost:8080/root, this will generate a random signing key.  Copy and paste this into application.yml
+under the app.jwt.key
+
+## TODO
+
+* Implement the challengeId
+* Client side error handling
+* Unit tests
 
 ##  Dependencies
 
