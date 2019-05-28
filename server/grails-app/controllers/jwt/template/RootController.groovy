@@ -38,8 +38,17 @@ class RootController {
 
     def listRegReqs() {
         List<RegistrationRequest> requests = RegistrationRequest.list()
-        log.info requests
+        requests.each {
+            log.info it.toString()
+        }
         render requests
+    }
+    def users() {
+        List<User> users = User.list()
+        users.each {
+            log.info it.toString()
+        }
+        render users
     }
 
 }

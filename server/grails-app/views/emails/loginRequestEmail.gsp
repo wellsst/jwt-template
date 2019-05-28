@@ -19,6 +19,7 @@
             Time: <b>${new Date()}</b> this link will expire in 15 minutes
         </td>
     </tr>
+
 </table>
 <p>
     %{--<createLink controller="login" action="login" absolute="true" params="[uid: '${uuid}']">To log in, click here</createLink>--}%
