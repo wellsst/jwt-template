@@ -22,9 +22,10 @@ under the app.jwt.key
 
 ## TODO
 
-* Implement the challengeId
+* Implement the challengeId - store it as a simple hash
 * Client side error handling
 * Unit tests
+* Add admin type/util features such as list users token, expire tokens
 
 ##  Dependencies
 
