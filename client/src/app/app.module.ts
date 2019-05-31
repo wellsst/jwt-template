@@ -18,6 +18,7 @@ import {WelcomeComponent} from './welcome/welcome.component';
 import {RouterModule, Routes} from "@angular/router";
 import { RegisterComponent } from './register/register.component';
 import { RegisterEmailSentComponent } from './register-email-sent/register-email-sent.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 const appRoutes: Routes = [
   {path: '', component: WelcomeComponent, canActivate: [AuthGuard]},
@@ -36,7 +37,8 @@ const appRoutes: Routes = [
     RequestJWTComponent,
     WelcomeComponent,
     RegisterComponent,
-    RegisterEmailSentComponent
+    RegisterEmailSentComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,

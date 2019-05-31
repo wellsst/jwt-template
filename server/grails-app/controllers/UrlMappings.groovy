@@ -8,8 +8,10 @@ class UrlMappings {
         "/signupRequest" (controller: "login", action: "signupRequest")
         "/requestJWT/$requestId" (controller: "login", action: "requestJWT")
         "/loginWithJWT" (controller: "login", action: "loginWithJWT")
-        "/listRegReqs" (controller: "root", action: "listRegReqs")
-        "/users" (controller: "root", action: "users")
+
+        "/listRegReqs" (controller: "util", action: "listRegReqs")
+        "/users" (controller: "util", action: "users")
+        "/genkey" (controller: "util", action: "genkey")
 
         delete "/$controller/$id(.$format)?"(action:"delete")
         get "/$controller(.$format)?"(action:"index")

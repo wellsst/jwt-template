@@ -25,6 +25,10 @@ class RegistrationRequest {
 
     def beforeInsert() {
         requestId = UUID.randomUUID().toString()
+        if (challengeId) {
+            challengeId = challengeId.encodeAsSHA256Bytes()
+            log.info "Updated challengeId: ${challengeId}"
+        }
     }
 
 
