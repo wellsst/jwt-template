@@ -56,6 +56,8 @@ dependencies {
     testCompile "org.grails:grails-datastore-rest-client"
     testCompile "org.grails:grails-web-testing-support"
 
+    compile "org.grails.plugins:gorm-graphql:1.0.2"
+
     // https://github.com/jwtk/jjwt
     compile 'io.jsonwebtoken:jjwt-api:0.10.5'
     runtime 'io.jsonwebtoken:jjwt-impl:0.10.5',

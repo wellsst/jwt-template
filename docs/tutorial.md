@@ -186,7 +186,12 @@ Start all this up locally:
 ./gradlew bootRun --parallel
 
 
+GraphQL
 
+ng add apollo-angular
+
+* https://grails.github.io/gorm-graphql/latest/guide/index.html
+* https://guides.grails.org/gorm-graphql-with-react-and-apollo/guide/index.html
 
 
 

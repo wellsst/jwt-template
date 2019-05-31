@@ -1,6 +1,30 @@
 package jwt.template
 
+import grails.rest.Resource
+
+//@Resource(uri='/user')
+/*
+
+http://localhost:8080/graphql/browser
+
+OR
+
+curl -X "POST" "http://localhost:8080/graphql" \
+     -H "Content-Type: application/graphql" \
+     -d $'
+{
+  userList(max: 3) {
+    id
+    username
+    registrationRequest {
+      requestId
+      dateCreated
+    }
+  }
+}'
+ */
 class User {
+    static graphql = true
 
     String username
     String loginToken
@@ -20,6 +44,6 @@ class User {
                 ", version=" + version +
                 ", username='" + username + '\'' +
                 ", loginToken='" + loginToken + '\'' +
-                '}';
+                '}'
     }
 }

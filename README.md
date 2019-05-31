@@ -23,15 +23,21 @@ under the app.jwt.key
 ## TODO
 
 * Implement the challengeId - store it as a simple hash
-* Add a simple server side request to the WelcomePage
+* Add a simple server side request to the WelcomePage - graphml
+* Add the scheduled service to remove old requests
 * Client side error handling
 * Unit tests
 * Add admin type/util features such as list users token, expire tokens
+* Allow user login from a certain number of browsers (re-use the same token)
 
 ##  Dependencies
 
 * Java web tokens grails: https://github.com/jwtk/jjwt 
 * Angular: https://github.com/auth0/angular2-jwt
+
+### GraphQL
+* https://grails.github.io/gorm-graphql/latest/guide/index.html
+* https://guides.grails.org/gorm-graphql-with-react-and-apollo/guide/index.html
 
 ## Inspired by
 

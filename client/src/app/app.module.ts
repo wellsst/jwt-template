@@ -19,12 +19,14 @@ import {RouterModule, Routes} from "@angular/router";
 import { RegisterComponent } from './register/register.component';
 import { RegisterEmailSentComponent } from './register-email-sent/register-email-sent.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { GraphQLModule } from './graphql.module';
 
 const appRoutes: Routes = [
   {path: '', component: WelcomeComponent, canActivate: [AuthGuard]},
   {path: 'register', component: RegisterComponent},
   {path: 'request-jwt', component: RequestJWTComponent},
   {path: 'register-email-sent', component: RegisterEmailSentComponent},
+  {path: 'user-list', component: UserListComponent},
   {path: '**', redirectTo: ''}
 ];
 
@@ -51,6 +53,7 @@ const appRoutes: Routes = [
       appRoutes,
       {enableTracing: true} // <-- debugging purposes only
     ),
+    GraphQLModule,
   ],
   providers: [
     NavService,
