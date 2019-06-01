@@ -97,6 +97,7 @@ app:
         daysToExpire: 365
         challengeKeyLength: 5
         key: NDY2ZGI4N2MtYWMxYi00ZDA2LWFjYjMtNzEzNWQ2MGVmODM1
+    cleanupDelaySeconds: 15 * 60
 
 environments:
     development:

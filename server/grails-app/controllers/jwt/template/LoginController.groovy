@@ -37,7 +37,7 @@ class LoginController {
         log.info "signupRequest: ${emailAddress}"
         try {
             User user = authService.signupRequest(emailAddress)
-            respond "testse", status: HttpStatus.OK
+            respond user.registrationRequest, status: HttpStatus.OK
         } catch (all) {
             all.printStackTrace()
             respond status: HttpStatus.UNAUTHORIZED

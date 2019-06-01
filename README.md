@@ -29,6 +29,8 @@ under the app.jwt.key
 * Unit tests
 * Add admin type/util features such as list users token, expire tokens
 * Allow user login from a certain number of browsers (re-use the same token)
+* User login history
+* Improve the flow of users making multiple requests
 
 ##  Dependencies
 

@@ -10,6 +10,7 @@ class RegistrationRequest {
     then they are challenged for it when they click on the link in the email
     */
     String challengeId
+    transient String displayChallengeId
     Date dateCreated
 
     static belongsTo = [user: User]
@@ -25,10 +26,12 @@ class RegistrationRequest {
 
     def beforeInsert() {
         requestId = UUID.randomUUID().toString()
+        // Originally I thought it a good idea to hash this but really...not required?
+        /*println "challengeId: ${challengeId}"
         if (challengeId) {
-            challengeId = challengeId.encodeAsSHA256Bytes()
+            challengeId = challengeId.encodeAsSHA256()
             log.info "Updated challengeId: ${challengeId}"
-        }
+        }*/
     }
 
 

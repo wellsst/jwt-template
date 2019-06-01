@@ -16,7 +16,7 @@ class AuthService extends BaseService {
 
     EmailService emailService
 
-    def grailsApplication
+
 
     /* User wants to signup with the service, we gen a short lived key and send an email */
 

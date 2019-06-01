@@ -5,14 +5,16 @@ import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 
 const GET_USERS = gql`{
-userList(max: 3) {
+userList(max: 10) {
     id
     username
     registrationRequest {
       requestId
       dateCreated
+      challengeId
     }
-  }}
+  }
+}
 `;
 
 @Component({
