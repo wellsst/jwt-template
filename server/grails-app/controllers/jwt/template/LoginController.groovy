@@ -1,9 +1,10 @@
 package jwt.template
 
+import grails.converters.JSON
 import grails.util.Environment
 import org.springframework.http.HttpStatus
 
-class LoginController {
+class LoginController extends BaseController {
 	static responseFormats = ['json', 'xml']
     String serverURL = grailsApplication.config.getProperty("grails.serverURL")
     def mailService
@@ -32,12 +33,14 @@ class LoginController {
         }
     }
 
-    def signupRequest() {
+    def registerRequest() {
         String emailAddress = request.JSON.emailAddress
-        log.info "signupRequest: ${emailAddress}"
+        log.info "registerRequest: ${emailAddress}"
         try {
             User user = authService.signupRequest(emailAddress)
-            respond user.registrationRequest, status: HttpStatus.OK
+            int cleanupOlderThan = authService.getAppConfigValue('cleanupRequestsOlderThanMinutes', 15) as int
+            render([challengeId: user.registrationRequest.challengeId, cleanupOlderThan: cleanupOlderThan] as JSON)
+            //respond cleanupOlderThan, status: HttpStatus.OK
         } catch (all) {
             all.printStackTrace()
             respond status: HttpStatus.UNAUTHORIZED
@@ -45,21 +48,35 @@ class LoginController {
     }
 
     /* User has clicked on email link and calls this */
+    def registerConfirm(String requestId) {
+        log.info "registerConfirm: ${requestId}"
+        try {
+            if (Environment.current == Environment.DEVELOPMENT) {
+                serverURL = "http://localhost:4200"
+            }
+            // todo: finish up the client side for this...it is created but finishe it with grabbing the requestId and asking for the challengeId
+            redirect url: "${serverURL}/register-confirm?requestId=${requestId}"
+        } catch (all) {
+            log.error all.message
+            render text: all.message, status: HttpStatus.NOT_FOUND
+        }
+    }
 
-    def requestJWT(String requestId) {
-        //String requestId = request.JSON.requestId
-        log.info "requestJWT: ${requestId}"
+    /* user has entered challengeID from email etc and goes here to finalise the process */
+    // todo: finish this
+    def registerAccept(String requestId, String challengeId) {
+        /*String requestId = request.JSON.requestId
+        String challengeId = request.JSON.challengeId*/
+        log.info "registerAccept...requestId: ${requestId}, challengeId: ${challengeId}"
         // log.info "${User.list()}"
         try {
             String jwtToken = authService.jwtFromRequestId(requestId)
-            // render text: jwtToken
             if (Environment.current == Environment.PRODUCTION) {
-                redirect url: "${serverURL}/#/request-jwt?jwt=${jwtToken}"
+                redirect url: "${serverURL}/request-jwt?jwt=${jwtToken}"
             } else {
                 redirect url: "http://localhost:4200/request-jwt?jwt=${jwtToken}"
             }
         } catch (all) {
-            all.printStackTrace()
             log.error all.message
             render text: all.message, status: HttpStatus.NOT_FOUND
         }
@@ -78,7 +95,7 @@ class LoginController {
     }
 
     // Yea this is not security at all
-    def login() {
+    /*def login() {
         String username = request.JSON.username
         log.info("Login attempt: ${request.JSON}")
 
@@ -91,66 +108,10 @@ class LoginController {
             log.info("User logged in ${user}")
             respond token: token
         }
-        /* TODO: Check for expired, locked etc */
+        *//* TODO: Check for expired, locked etc *//*
         else {
             log.warn("User login attempt ${username}, but user not found or password invalid, users are: ${User.list(max: 10)}")
             render text: "User login attempt ${username}, but user not found or password invalid", status: HttpStatus.UNAUTHORIZED
         }
-    }
-
-    /*def signup() {
-        String emailAddress = request.JSON.emailAddress
-        log.info "Signup request from user: ${emailAddress}"
-
-        User user = User.findByUsername(emailAddress)
-        if (user) {
-            respond text: "User already exists, try just logging in.", status: HttpStatus.IM_USED
-        } else {
-            def wordMap = servletContext["wordMap"]
-            String password = generatePassphrase(wordMap)[0]
-
-            User newUser = new User(username: emailAddress, password: password)
-            def loginToken = UUID.randomUUID().toString()
-            // todo: create a real full JWT loginToken
-            newUser.loginToken = loginToken
-            newUser.save(flush: true)
-            Role userRole = Role.findOrSaveByAuthority("ROLE_USER")
-            UserRole.create(newUser, userRole, true)
-
-            def ctx = startAsync()
-            ctx.start {
-                // Long running task
-                mailService.sendMail {
-                    to emailAddress
-                    from "websystemz@gmail.com"
-                    subject "Hello from CircuitShuffle"
-                    // html view: "/emails/html-hello", model: [param1: "value1", param2: "value2"]
-                    html """
-                    <p>Congrats!  You have signed-up to CircuitShuffle, your password is: <b>${password}</b><p>
-                        <p></p>
-                        <p>We suggest changing this password ASAP</p>
-                        <p></p>
-                        <p><a href='${grailsApplication.config.grails.serverURL}/login'>Login:  using your email address</a></p>
-                        <p></p>
-                        <p>Happy shuffling!</p>
-                        <p></p>
-                        <p>The CircuitShuffle team</p>
-                        
-                    """
-                }
-                ctx.complete()
-            }
-            *//*p.onError { Throwable err ->
-                println "An error occured ${err.message}"
-            }
-            p.onComplete { result ->
-                println "Promise returned $result"
-            }*//*
-
-            *//*Map response = [username: emailAddress, password:password]
-            respond response*//*
-            respond loginToken: loginToken
-        }
-
     }*/
 }

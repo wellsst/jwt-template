@@ -1,5 +1,6 @@
 environments {
     production {
+        // Follow will be for deploy to Heroku
         dataSource {
             dbCreate = "update"
             driverClassName = "org.postgresql.Driver"
@@ -10,19 +11,9 @@ environments {
             password = uri.userInfo?.split(":")[1]
         }
         grails {
-            serverURL = "circuitshuffle.herokuapp.com"
+            serverURL = "changeme.herokuapp.com"
         }
     }
 }
-
-/*
-jasypt {
-    algorithm = "PBEWITHSHA256AND256BITAES-CBC-BC"
-    // algorithm = "PBEWITHMD5ANDDES"
-    providerName = "BC"
-    password = "65ScanHull37thStatueFuseSq"
-    keyObtentionIterations = 1000
-}
-*/
 
 

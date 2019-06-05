@@ -1,0 +1,9 @@
+<form (ngSubmit)="registerConfirm()" #signupForm="ngForm">
+
+  <div class="form-group form-inline">
+    <input type="challengeId" name="challengeId" id="challengeId" [(ngModel)]="challengeId" required ngModel challengeId
+           placeholder="Enter the challengeId to finish registration" size="10">
+    &nbsp;
+    <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Finish</button>
+  </div>
+</form>

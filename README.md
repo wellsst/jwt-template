@@ -22,15 +22,15 @@ under the app.jwt.key
 
 ## TODO
 
-* Implement the challengeId - store it as a simple hash
-* Add a simple server side request to the WelcomePage - graphml
-* Add the scheduled service to remove old requests
+* Implement the challengeId
+*  
 * Client side error handling
 * Unit tests
 * Add admin type/util features such as list users token, expire tokens
 * Allow user login from a certain number of browsers (re-use the same token)
 * User login history
 * Improve the flow of users making multiple requests
+* Check and warn if the server is not running as HTTP**S**, this whole thing hinges on this
 
 ##  Dependencies
 
@@ -47,3 +47,8 @@ under the app.jwt.key
 * https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial
 * https://medium.com/@ryanchenkie_40935/angular-authentication-using-the-http-client-and-http-interceptors-2f9d1540eb8
 * https://theinfogrid.com/tech/developers/angular/refreshing-authorization-tokens-angular-6/
+
+## Flow:
+
+
+

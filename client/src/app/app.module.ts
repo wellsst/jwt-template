@@ -17,19 +17,20 @@ import {AuthGuard} from "./guards/auth.guard";
 import {WelcomeComponent} from './welcome/welcome.component';
 import {RouterModule, Routes} from "@angular/router";
 import { RegisterComponent } from './register/register.component';
-import { RegisterEmailSentComponent } from './register-email-sent/register-email-sent.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { GraphQLModule } from './graphql.module';
+import { RegisterAcceptComponent } from './register-accept/register-accept.component';
+import { RegisterConfirmComponent } from './register-confirm/register-confirm.component';
 
 const appRoutes: Routes = [
   {path: '', component: WelcomeComponent, canActivate: [AuthGuard]},
   {path: 'register', component: RegisterComponent},
+  {path: 'register-confirm', component: RegisterConfirmComponent},
+  {path: 'register-accept', component: RegisterAcceptComponent,
   {path: 'request-jwt', component: RequestJWTComponent},
-  {path: 'register-email-sent', component: RegisterEmailSentComponent},
   {path: 'user-list', component: UserListComponent},
   {path: '**', redirectTo: ''}
 ];
-
 
 @NgModule({
   declarations: [
@@ -39,8 +40,9 @@ const appRoutes: Routes = [
     RequestJWTComponent,
     WelcomeComponent,
     RegisterComponent,
-    RegisterEmailSentComponent,
-    UserListComponent
+    UserListComponent,
+    RegisterAcceptComponent,
+    RegisterConfirmComponent
   ],
   imports: [
     BrowserModule,

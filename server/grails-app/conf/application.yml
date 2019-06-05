@@ -98,6 +98,7 @@ app:
         challengeKeyLength: 5
         key: NDY2ZGI4N2MtYWMxYi00ZDA2LWFjYjMtNzEzNWQ2MGVmODM1
     cleanupDelaySeconds: 15 * 60
+    cleanupRequestsOlderThanMinutes: 15
 
 environments:
     development:

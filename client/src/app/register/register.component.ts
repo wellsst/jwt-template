@@ -13,6 +13,9 @@ export class RegisterComponent implements OnInit {
   loading = false;
   emailAddress = ''
 
+  challengeId: ''
+  cleanupOlderThan: ''
+
   constructor(
     private router: Router,
     private authenticationService: AuthService) {
@@ -25,19 +28,6 @@ export class RegisterComponent implements OnInit {
 
   login() {
     this.loading = true;
-    /*this.authenticationService.login(this.model.email, this.model.password)
-      .subscribe(result => {
-        if (result === true) {
-          // login successful
-          console.log('Login request ok user is: ' + this.authenticationService.username);
-         // this.router.navigate(['/view-history']);
-          this.router.navigate(['/login-email-sent']);
-        }
-      }, error => {
-        this.loading = false;
-        this.openSnackBar(error.error + '', '');
-        console.log(error.error );
-      });*/
   }
 
   signupRequest() {
@@ -47,8 +37,9 @@ export class RegisterComponent implements OnInit {
       .subscribe(result => {
         // login successful
         console.log('Register request ok user is: ' + this.authenticationService.username);
-        // this.router.navigate(['/view-history']);
-        this.router.navigate(['/register-email-sent']);
+        this.challengeId = result.challengeId;
+        this.cleanupOlderThan = result.cleanupOlderThan;
+        // this.router.navigate(['/register-email-sent']);
       }, error => {
         this.loading = false;
         console.log(error.error );

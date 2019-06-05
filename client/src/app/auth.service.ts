@@ -30,10 +30,14 @@ export class AuthService {
     this.username = currentUser && currentUser.username;*/
   }
 
-
   signupRequest(emailAddress: string): Observable<Object> {
-    return this.http.post(environment.serverUrl + 'signupRequest/',
+    return this.http.post(environment.serverUrl + 'registerRequest/',
       JSON.stringify({emailAddress: emailAddress}), httpOptions); // todo: should not need httpOptions here use the inteceptor
+  }
+
+  registerAccept(requestId: string, challengeId: string): Observable<Object> {
+    return this.http.post(environment.serverUrl + 'registerAccept',
+      JSON.stringify({requestId: requestId, challengeId: challengeId}), httpOptions);
   }
 
   /* requestJWT(loginId: string) {

@@ -1,9 +1,28 @@
-<form (ngSubmit)="signupRequest()" #signupForm="ngForm">
+<form (ngSubmit)="signupRequest()" #signupForm="ngForm" *ngIf="!challengeId">
 
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email" [(ngModel)]="emailAddress" required ngModel email placeholder="Please enter your Email address">
+  <div class="form-group form-inline">
+    <!--<label for="email">Email: </label>-->
+    <input type="email" name="email" id="email" [(ngModel)]="emailAddress" required ngModel email
+           placeholder="Enter your email address to register" size="35">
+    &nbsp;
+    <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Register</button>
   </div>
-
-  <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Signup</button>
 </form>
+
+<div *ngIf="challengeId">
+  <p>
+    Thank you for registering, to finish you simply need to...</p>
+
+  <ol>
+    <li>Check your email inbox at: <i>{{emailAddress}}</i>, you will shortly receive an email from us with a link that will
+      enable your access on the browser/device you click on the link with only.
+      (if you wish to enable on other devices/browsers then please follow the same simple process on them)
+    </li>
+
+    <li>Once prompted, please enter this unique challenge ID: <b>{{challengeId}}</b></li>
+
+  </ol>
+
+  <p>This request will be removed from the system in approx: {{cleanupOlderThan}} minutes.</p>
+
+</div>

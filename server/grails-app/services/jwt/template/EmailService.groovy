@@ -18,7 +18,7 @@ class EmailService {
     def sendLoginRequest(User user) {
 
         String serverURL = grailsApplication.config.getProperty("grails.serverURL")
-        String loginLink = "${serverURL}/requestJWT/${user.registrationRequest.requestId}"
+        String loginLink = "${serverURL}/registerConfirm/${user.registrationRequest.requestId}"
         log.info "NOT Yet Sending login request email: ${user.username} to ${loginLink}"
 
         // grailsLinkGenerator.link(controller: 'login', action: 'login', id: user.registrationRequest.requestId, absolute: true)

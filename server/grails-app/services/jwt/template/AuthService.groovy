@@ -10,13 +10,10 @@ import io.jsonwebtoken.security.Keys
 
 import javax.crypto.SecretKey
 
-// @GrailsCompileStatic
 @Transactional(readOnly = true)
 class AuthService extends BaseService {
 
     EmailService emailService
-
-
 
     /* User wants to signup with the service, we gen a short lived key and send an email */
 
@@ -25,13 +22,13 @@ class AuthService extends BaseService {
         User user = User.findByUsername(userEmail)
         if (user) {
             // Already has one?
-            log.info "signupRequest: ${userEmail}, already exists"
+            log.info "registerRequest: ${userEmail}, already exists"
             if (user.registrationRequest.requestId) {
                 log.info "User ${userEmail} already exists with login link: ${user.registrationRequest.requestId}"
                 return user
             }
         } else {
-            log.info "signupRequest: ${userEmail}, creating as new user"
+            log.info "registerRequest: ${userEmail}, creating as new user"
             def registrationRequest = new RegistrationRequest()
             registrationRequest.requestId = UUID.randomUUID() as String
             registrationRequest.challengeId = RegistrationRequest.generateChallengeId(getAppConfigValue("jwt.challengeKeyLength", 4) as Integer)
