@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {catchError, retry} from 'rxjs/operators';
 import {AuthService} from './auth.service';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   // could enahnce with logging like: https://theinfogrid.com/tech/developers/angular/logging-http-errors-in-angular-6
   // token handling: https://theinfogrid.com/tech/developers/angular/refreshing-authorization-tokens-angular-6/
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  /*intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(catchError(err => {
       if (err.status === 401 || err.status === 403) {
         // auto logout if 401 response returned from api
@@ -21,5 +21,23 @@ export class ErrorInterceptor implements HttpInterceptor {
       const error = err.message || err.statusText;
       return throwError(error);
     }));
+  }*/
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request)
+      .pipe(
+        retry(1),
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) {
+            // client-side error
+            errorMessage = `Error: ${error.error.message}`;
+          } else {
+            // server-side error
+            errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.message}`;
+          }
+          console.log(errorMessage);
+          return throwError(errorMessage);
+        })
+      )
   }
 }

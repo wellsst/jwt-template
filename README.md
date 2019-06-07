@@ -17,19 +17,16 @@ E.g., from the `client` directory, start the client application: `npm start`
 
 ## Getting started
 
-After startup go to: http://localhost:8080/root, this will generate a random signing key.  Copy and paste this into application.yml
+After startup go to: http://localhost:8080/util, this will generate a random signing key.  Copy and paste this into application.yml
 under the app.jwt.key
 
 ## TODO
 
-* Implement the challengeId
-*  
-* Client side error handling
-* Unit tests
+* Block too many multiple requests for a token, you cant spam an email 
+* Improve unit tests on client and server
 * Add admin type/util features such as list users token, expire tokens
 * Allow user login from a certain number of browsers (re-use the same token)
 * User login history
-* Improve the flow of users making multiple requests
 * Check and warn if the server is not running as HTTP**S**, this whole thing hinges on this
 
 ##  Dependencies

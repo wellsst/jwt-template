@@ -5,12 +5,12 @@ import grails.util.Environment
 import org.springframework.http.HttpStatus
 
 class LoginController extends BaseController {
-	static responseFormats = ['json', 'xml']
+    static responseFormats = ['json', 'xml']
     String serverURL = grailsApplication.config.getProperty("grails.serverURL")
     def mailService
     AuthService authService
 
-    def index() { }
+    def index() {}
 
     def show() {
         if (request.get) {
@@ -33,6 +33,8 @@ class LoginController extends BaseController {
         }
     }
 
+    /* User has requested to start the registration process */
+
     def registerRequest() {
         String emailAddress = request.JSON.emailAddress
         log.info "registerRequest: ${emailAddress}"
@@ -48,44 +50,52 @@ class LoginController extends BaseController {
     }
 
     /* User has clicked on email link and calls this */
+
     def registerConfirm(String requestId) {
         log.info "registerConfirm: ${requestId}"
-        try {
-            if (Environment.current == Environment.DEVELOPMENT) {
-                serverURL = "http://localhost:4200"
+        int requestCount = RegistrationRequest.countByRequestId requestId
+        if (requestCount == 1) {
+            try {
+                if (Environment.current == Environment.DEVELOPMENT) {
+                    serverURL = "http://localhost:4200"
+                }
+                redirect url: "${serverURL}/register-confirm?requestId=${requestId}"
+            } catch (all) {
+                log.error all.message
+                render text: all.message, status: HttpStatus.NOT_FOUND
             }
-            // todo: finish up the client side for this...it is created but finishe it with grabbing the requestId and asking for the challengeId
-            redirect url: "${serverURL}/register-confirm?requestId=${requestId}"
-        } catch (all) {
-            log.error all.message
-            render text: all.message, status: HttpStatus.NOT_FOUND
+        } else {
+            render text: "No registration request found for id: ${requestId}", status: HttpStatus.NOT_FOUND
         }
     }
 
     /* user has entered challengeID from email etc and goes here to finalise the process */
-    // todo: finish this
-    def registerAccept(String requestId, String challengeId) {
-        /*String requestId = request.JSON.requestId
-        String challengeId = request.JSON.challengeId*/
+
+    def registerAccept() {
+        String requestId = request.JSON.requestId
+        String challengeId = request.JSON.challengeId
         log.info "registerAccept...requestId: ${requestId}, challengeId: ${challengeId}"
-        // log.info "${User.list()}"
         try {
-            String jwtToken = authService.jwtFromRequestId(requestId)
-            if (Environment.current == Environment.PRODUCTION) {
-                redirect url: "${serverURL}/request-jwt?jwt=${jwtToken}"
-            } else {
-                redirect url: "http://localhost:4200/request-jwt?jwt=${jwtToken}"
+            String jwtToken = authService.jwtFromRequestId(requestId, challengeId)
+            /*if (Environment.current == Environment.DEVELOPMENT) {
+                serverURL = "http://localhost:4200"
             }
+            def redirectTo = "${serverURL}/request-jwt" //?jwt=${jwtToken}"
+            log.info "registerAccept Redirect: ${redirectTo}"
+            redirect url: redirectTo //, params:[jwt:jwtToken]*/
+            def token = ["jwt": jwtToken]
+            respond token
         } catch (all) {
+            // all.printStackTrace()
             log.error all.message
-            render text: all.message, status: HttpStatus.NOT_FOUND
+            def error = [message: all.message]
+            render error as JSON, status: HttpStatus.BAD_REQUEST
         }
     }
 
     def loginWithJWT() {
         String jwtToken = request.JSON.jwtToken
         String email = request.JSON.username
-
         try {
             boolean accepted = authService.loginFromJWT(jwtToken, email)
             respond accepted
@@ -93,25 +103,4 @@ class LoginController extends BaseController {
             respond status: HttpStatus.NOT_FOUND
         }
     }
-
-    // Yea this is not security at all
-    /*def login() {
-        String username = request.JSON.username
-        log.info("Login attempt: ${request.JSON}")
-
-        def user = User.findByUsername(username)
-        if (user) {
-            def token = UUID.randomUUID().toString()
-            // todo: create a real full JWT loginToken
-            user.loginToken = token
-            user.save()
-            log.info("User logged in ${user}")
-            respond token: token
-        }
-        *//* TODO: Check for expired, locked etc *//*
-        else {
-            log.warn("User login attempt ${username}, but user not found or password invalid, users are: ${User.list(max: 10)}")
-            render text: "User login attempt ${username}, but user not found or password invalid", status: HttpStatus.UNAUTHORIZED
-        }
-    }*/
 }

@@ -1,7 +1,6 @@
 package jwt.template
 
 import auth.AuthException
-import grails.compiler.GrailsCompileStatic
 import grails.gorm.transactions.Transactional
 import groovy.time.TimeCategory
 import io.jsonwebtoken.JwtException
@@ -10,7 +9,7 @@ import io.jsonwebtoken.security.Keys
 
 import javax.crypto.SecretKey
 
-@Transactional(readOnly = true)
+@Transactional
 class AuthService extends BaseService {
 
     EmailService emailService
@@ -21,19 +20,23 @@ class AuthService extends BaseService {
         // Lookup user?
         User user = User.findByUsername(userEmail)
         if (user) {
-            // Already has one?
+            // Already has a reg request?
             log.info "registerRequest: ${userEmail}, already exists"
-            if (user.registrationRequest.requestId) {
-                log.info "User ${userEmail} already exists with login link: ${user.registrationRequest.requestId}"
+            if (user.registrationRequest) {
+                log.info "User ${userEmail} already exists with requestId: ${user.registrationRequest.requestId}"
+                // Note: This allows the old request to be overridden, if you dont like this then uncomment and return a msg to the user
                 return user
             }
         } else {
-            log.info "registerRequest: ${userEmail}, creating as new user"
-            def registrationRequest = new RegistrationRequest()
-            registrationRequest.requestId = UUID.randomUUID() as String
-            registrationRequest.challengeId = RegistrationRequest.generateChallengeId(getAppConfigValue("jwt.challengeKeyLength", 4) as Integer)
-            user = new User(username: userEmail, registrationRequest: registrationRequest)
+            user = new User(username: userEmail)
         }
+        log.info "registerRequest: ${userEmail}, creating a new request"
+        RegistrationRequest registrationRequest = new RegistrationRequest()
+        registrationRequest.requestId = UUID.randomUUID() as String
+        registrationRequest.challengeId = RegistrationRequest.generateChallengeId(getAppConfigValue("jwt.challengeKeyLength", 4) as Integer)
+        registrationRequest.user = user
+        registrationRequest.save(flush: true)
+        user.registrationRequest = registrationRequest
 
         // Dev only: Just check for errors
         if (!user.validate()) {
@@ -48,28 +51,42 @@ class AuthService extends BaseService {
         user
     }
 
+    private String createJWTForUser(RegistrationRequest registrationRequest) {
+
+        User requestingUser = registrationRequest.user// User.findByRegistrationRequest(registrationRequest)
+
+        SecretKey key = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes)
+        String jwt = Jwts.builder().
+                setIssuer(getAppConfigValue("jwt.issuer", "jwt-template") as String).
+                setSubject(requestingUser.username).
+                setIssuedAt(new Date()).
+                setExpiration(new Date() + (getAppConfigValue("jwt.daysToExpire", 365) as Integer)).
+                signWith(key).compact()
+        requestingUser.loginToken = jwt
+        //registrationRequest.removeFromUser()
+        //requestingUser.registrationRequest.delete()
+        requestingUser.save(flush: true)
+        jwt
+    }
+
     /* User has clicked on the email link */
+
+    def jwtFromRequestId(String loginRequestId, String challengeId) {
+        RegistrationRequest registrationRequest = RegistrationRequest.findByRequestIdAndChallengeId loginRequestId, challengeId
+
+        if (registrationRequest) {
+            return createJWTForUser(registrationRequest)
+        } else {
+            String msg = "User signup attempt but no login loginToken found for ${loginRequestId} and challengeId: ${challengeId} "
+            throw new AuthException(msg)
+        }
+    }
 
     def jwtFromRequestId(String loginRequestId) {
         RegistrationRequest registrationRequest = RegistrationRequest.findByRequestId loginRequestId
 
         if (registrationRequest) {
-            User requestingUser = registrationRequest.user
-
-            SecretKey key = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes)
-            String jwt = Jwts.builder().
-                    setIssuer(getAppConfigValue("jwt.issuer", "jwt-template") as String).
-                    setSubject(requestingUser.username).
-                    setIssuedAt(new Date()).
-                    setExpiration(new Date() + (getAppConfigValue("jwt.daysToExpire", 365) as Integer)).
-                    signWith(key).compact()
-            requestingUser.loginToken = jwt
-            requestingUser.save(flush: true)
-
-            requestingUser.registrationRequest.delete()
-            /* requestingUser.registrationRequest = null
-*/
-            return jwt
+            return createJWTForUser(registrationRequest)
         } else {
             String msg = "User signup attempt but no login loginToken found for ${loginRequestId}"
             throw new AuthException(msg)
@@ -123,15 +140,4 @@ class AuthService extends BaseService {
         }
     }
 
-    /* todo: setup a schedule */
-
-    def cleanupOldRequests() {
-        Date removeLoginRequestsOlderThan = new Date()
-        use(TimeCategory) {
-            removeLoginRequestsOlderThan - 15.minutes // todo: move to config
-        }
-
-        List<RegistrationRequest> cleanupList = RegistrationRequest.findAllByDateCreatedLessThan(removeLoginRequestsOlderThan)
-        RegistrationRequest.deleteAll(cleanupList)
-    }
 }

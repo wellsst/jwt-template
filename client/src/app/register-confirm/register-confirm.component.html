@@ -1,9 +1,21 @@
-<form (ngSubmit)="registerConfirm()" #signupForm="ngForm">
+<div *ngIf="message" class="alert alert-danger">{{message}}</div>
+
+<form *ngIf="!jwt"(ngSubmit)="registerConfirm()" #signupForm="ngForm">
 
   <div class="form-group form-inline">
+    <p>Enter the challengeId to finish registration</p>
     <input type="challengeId" name="challengeId" id="challengeId" [(ngModel)]="challengeId" required ngModel challengeId
-           placeholder="Enter the challengeId to finish registration" size="10">
+           placeholder="ChallengeId" size="10">
     &nbsp;
     <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Finish</button>
   </div>
 </form>
+
+<div *ngIf="jwt" class="badge-success">
+  <p>You have been successfully registered on this browser</p>
+  <p>
+    <a routerLink="/welcome">
+      <span class="label">You should now be able to access this page</span>
+    </a>
+  </p>
+</div>

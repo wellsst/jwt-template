@@ -30,11 +30,12 @@ class User {
     String loginToken
 
     static hasOne = [registrationRequest:RegistrationRequest]
+    // RegistrationRequest registrationRequest
 
     static constraints = {
         username email: true, nullable: false, blank: false, unique: true
         loginToken nullable: true
-        registrationRequest nullable: true
+        registrationRequest nullable: true //, unique: true
     }
 
     @Override

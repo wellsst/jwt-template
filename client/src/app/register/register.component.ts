@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
         // this.router.navigate(['/register-email-sent']);
       }, error => {
         this.loading = false;
-        console.log(error.error );
+        console.log(error);
       });
   }
 }

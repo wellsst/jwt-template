@@ -3,6 +3,8 @@ package jwt.template
 import org.apache.commons.lang.RandomStringUtils
 
 class RegistrationRequest {
+    static graphql = true
+
     String requestId  // a UUID that will be sent as part of the email to the user
 
     /* Could use the challengeId to strengthen the process, it's a kind of one time pin
@@ -10,7 +12,6 @@ class RegistrationRequest {
     then they are challenged for it when they click on the link in the email
     */
     String challengeId
-    transient String displayChallengeId
     Date dateCreated
 
     static belongsTo = [user: User]
@@ -20,8 +21,7 @@ class RegistrationRequest {
     }
 
     static String generateChallengeId(int nrChars) {
-        // todo: could move the count to config
-        RandomStringUtils.random(nrChars, true, true)
+        RandomStringUtils.random(nrChars, false, true)
     }
 
     def beforeInsert() {

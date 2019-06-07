@@ -12,6 +12,9 @@ export class RegisterConfirmComponent implements OnInit {
 
   requestId: string;
   challengeId: string;
+  message: string;
+
+  jwt:string;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -31,10 +34,16 @@ export class RegisterConfirmComponent implements OnInit {
       .subscribe(result => {
         // login successful
         console.log('Register accepted ok user is: ' + this.authenticationService.username);
-        this.challengeId = result.challengeId;
-        // this.router.navigate(['/register-email-sent']);
+
+        if (result.jwt) {
+          this.jwt = <string>result.jwt;
+          this.authenticationService.login(this.jwt);
+        } else {
+          this.message = "Error in receiving the JWT, please try again"
+        }
       }, error => {
-        console.log(error.error );
+        console.log(error );
+        this.message = error;
       });
   }
 }
