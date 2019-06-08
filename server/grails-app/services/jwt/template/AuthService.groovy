@@ -2,7 +2,6 @@ package jwt.template
 
 import auth.AuthException
 import grails.gorm.transactions.Transactional
-import groovy.time.TimeCategory
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -15,7 +14,6 @@ class AuthService extends BaseService {
     EmailService emailService
 
     /* User wants to signup with the service, we gen a short lived key and send an email */
-
     def signupRequest(String userEmail) {
         // Lookup user?
         User user = User.findByUsername(userEmail)

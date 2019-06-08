@@ -20,6 +20,8 @@ E.g., from the `client` directory, start the client application: `npm start`
 After startup go to: http://localhost:8080/util, this will generate a random signing key.  Copy and paste this into application.yml
 under the app.jwt.key
 
+Consider running a local mail server such as https://mailslurper.com or point to your development one by editing application.yml
+
 ## TODO
 
 * Block too many multiple requests for a token, you cant spam an email 
@@ -33,6 +35,7 @@ under the app.jwt.key
 
 * Java web tokens grails: https://github.com/jwtk/jjwt 
 * Angular: https://github.com/auth0/angular2-jwt
+* http://gpc.github.io/grails-mail/
 
 ### GraphQL
 * https://grails.github.io/gorm-graphql/latest/guide/index.html

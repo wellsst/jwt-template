@@ -69,15 +69,9 @@ grails:
 
     serverURL: "http://localhost:8080"
     mail:
-        host: "smtp.gmail.com"
-        port: 465
-        username: "example_gmail_setup@gmail.com"
-        password: 'secret'
-        props:
-            mail.smtp.auth: "true"
-            mail.smtp.socketFactory.port: "465"
-            mail.smtp.socketFactory.class: "javax.net.ssl.SSLSocketFactory"
-            mail.smtp.socketFactory.fallback: "false"
+        host: "localhost"
+        port: 25
+
 ---
 hibernate:
     cache:
@@ -92,6 +86,7 @@ dataSource:
     password: ''
 
 app:
+    name: JWT Template
     jwt:
         issuer: jwt-template
         daysToExpire: 365
