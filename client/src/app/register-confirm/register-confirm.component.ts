@@ -36,7 +36,7 @@ export class RegisterConfirmComponent implements OnInit {
         console.log('Register accepted ok user is: ' + this.authenticationService.username);
 
         if (result.jwt) {
-          this.jwt = <string>result.jwt;
+          this.jwt = result.jwt;
           this.authenticationService.login(this.jwt);
         } else {
           this.message = "Error in receiving the JWT, please try again"
@@ -47,3 +47,5 @@ export class RegisterConfirmComponent implements OnInit {
       });
   }
 }
+
+

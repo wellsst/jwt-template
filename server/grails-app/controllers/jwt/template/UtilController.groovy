@@ -30,7 +30,6 @@ class UtilController extends BaseController {
         //def keyString = Keys.secretKeyFor(SignatureAlgorithm.HS256)
         log.info(base64Key)
         render base64Key
-        // redirect(uri:"/index.html")
     }
 
 

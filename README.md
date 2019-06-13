@@ -20,11 +20,15 @@ E.g., from the `client` directory, start the client application: `npm start`
 After startup go to: http://localhost:8080/util, this will generate a random signing key.  Copy and paste this into application.yml
 under the app.jwt.key
 
+For this to work in a production environment the whole thing hinges on running over a secure HTTPS connection.  THere are a couple of ways to do this
+[Start from the server-side](http://grailsblog.objectcomputing.com/deployment/2017/06/28/running-grails-with-a-self-signed-ssl-certificate.html)
+This might help as well: https://docs.rundeck.com/docs/administration/security/configuring-ssl.html
+
 Consider running a local mail server such as https://mailslurper.com or point to your development one by editing application.yml
 
 ## TODO
 
-* Block too many multiple requests for a token, you cant spam an email 
+* Block/throttle too many multiple requests for a token, you cant spam an email address for requests.
 * Improve unit tests on client and server
 * Add admin type/util features such as list users token, expire tokens
 * Allow user login from a certain number of browsers (re-use the same token)
@@ -40,6 +44,7 @@ Consider running a local mail server such as https://mailslurper.com or point to
 ### GraphQL
 * https://grails.github.io/gorm-graphql/latest/guide/index.html
 * https://guides.grails.org/gorm-graphql-with-react-and-apollo/guide/index.html
+* https://www.apollographql.com/docs/tutorial/queries/
 
 ## Inspired by
 

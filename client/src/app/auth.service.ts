@@ -12,8 +12,7 @@ const httpOptions = {
 };
 
 /**
- * Derived from http://jasonwatmore.com/post/2016/08/16/angular-2-jwt-authentication-example-tutorial
- * Updated for angular 7: https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial#auth-guard-ts
+ * Derived from: https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial#auth-guard-ts
  */
 @Injectable({
   providedIn: 'root',
@@ -30,12 +29,12 @@ export class AuthService {
     this.username = currentUser && currentUser.username;*/
   }
 
-  signupRequest(emailAddress: string): Observable<Object> {
-    return this.http.post(environment.serverUrl + 'registerRequest/',
+  signupRequest(emailAddress: string): Observable<JwtServerResponse> {
+    return this.http.post<JwtServerResponse>(environment.serverUrl + 'registerRequest/',
       JSON.stringify({emailAddress: emailAddress}), httpOptions); // todo: should not need httpOptions here use the inteceptor
   }
 
-  registerAccept(requestId: string, challengeId: string): Observable<Object> {
+  registerAccept(requestId: string, challengeId: string): Observable<JwtServerResponse> {
     return this.http.post(environment.serverUrl + 'registerAccept',
       JSON.stringify({requestId: requestId, challengeId: challengeId}), httpOptions);
   }
@@ -47,9 +46,6 @@ export class AuthService {
  */
   login(jwtToken: string) {
     this.setSession(jwtToken);
-    /*return this.http.post(environment.serverUrl + '/login/',
-      {username: username, jwtToken: jwtToken}, httpOptions).do(res => this.setSession).shareReplay();*/
-
   }
 
   // So JWT can handle UTF-8: https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings

@@ -22,7 +22,6 @@ class EmailService extends BaseService {
         log.info user.registrationRequest.requestId
         log.info getAppConfigValue('cleanupRequestsOlderThanMinutes', 15)
 */
-
         // Send email
         sendMail {
             multipart true

@@ -11,10 +11,10 @@ import {first} from "rxjs/operators";
 export class RegisterComponent implements OnInit {
 
   loading = false;
-  emailAddress = ''
+  emailAddress = '';
 
-  challengeId: ''
-  cleanupOlderThan: ''
+  challengeId: string = '';
+  cleanupOlderThan: string = '';
 
   constructor(
     private router: Router,

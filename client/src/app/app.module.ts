@@ -20,6 +20,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { GraphQLModule } from './graphql.module';
 import { RegisterAcceptComponent } from './register-accept/register-accept.component';
 import { RegisterConfirmComponent } from './register-confirm/register-confirm.component';
+import { SecureCheckComponent } from './secure-check/secure-check.component';
 
 const appRoutes: Routes = [
   {path: '', component: WelcomeComponent, canActivate: [AuthGuard]},
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
     RegisterComponent,
     UserListComponent,
     RegisterAcceptComponent,
-    RegisterConfirmComponent
+    RegisterConfirmComponent,
+    SecureCheckComponent
   ],
   imports: [
     BrowserModule,

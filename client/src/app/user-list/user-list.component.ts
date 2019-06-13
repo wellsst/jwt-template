@@ -31,7 +31,7 @@ export class UserListComponent implements OnInit {
     this.users = this.apollo.watchQuery({
         query: GET_USERS,
       })
-      .valueChanges.pipe(map(result => result.data && result.data.userList));
+      .valueChanges.pipe(map(result => result.data && result.data["userList"]));
   }
 
 }
