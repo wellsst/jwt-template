@@ -26,6 +26,21 @@ This might help as well: https://docs.rundeck.com/docs/administration/security/c
 
 Consider running a local mail server such as https://mailslurper.com or point to your development one by editing application.yml
 
+## The flow of the Demo
+
+![Landing page](https://github.com/wellsst/jwt-template/raw/master/docs/1_index.PNG "Landing page")
+![Reg Request](https://github.com/wellsst/jwt-template/raw/master/docs/2_reg_request.PNG "Reg Request")
+
+![Reg accept](https://github.com/wellsst/jwt-template/raw/master/docs/3_reg_accept.PNG "Reg accept")
+
+![Email](https://github.com/wellsst/jwt-template/raw/master/docs/4_email.png "Email")
+
+![Enter challenge ID](https://github.com/wellsst/jwt-template/raw/master/docs/5_challengeid.png "Enter challenge ID")
+
+![Reg complete](https://github.com/wellsst/jwt-template/raw/master/docs/6_complete.png "Reg complete")
+
+![View guarded page](https://github.com/wellsst/jwt-template/raw/master/docs/7_guarded.png "View guarded page")
+
 ## TODO
 
 * Improve unit tests on client and server
