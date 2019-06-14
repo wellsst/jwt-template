@@ -16,6 +16,8 @@ export class RegisterConfirmComponent implements OnInit {
 
   jwt:string;
 
+  loading = false;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private authenticationService: AuthService) {
@@ -29,6 +31,7 @@ export class RegisterConfirmComponent implements OnInit {
   }
 
   registerConfirm() {
+    this.loading = true;
     this.authenticationService.registerAccept(this.requestId, this.challengeId)
       .pipe(first())
       .subscribe(result => {
@@ -44,6 +47,7 @@ export class RegisterConfirmComponent implements OnInit {
       }, error => {
         console.log(error );
         this.message = error;
+        this.loading = false;
       });
   }
 }

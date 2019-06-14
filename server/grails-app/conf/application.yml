@@ -94,6 +94,7 @@ app:
         key: NDY2ZGI4N2MtYWMxYi00ZDA2LWFjYjMtNzEzNWQ2MGVmODM1
     cleanupDelaySeconds: 15 * 60
     cleanupRequestsOlderThanMinutes: 15
+    maxRequestsPerRemoteAddr: 3
 
 environments:
     development:

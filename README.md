@@ -33,7 +33,6 @@ Consider running a local mail server such as https://mailslurper.com or point to
 * Add admin type/util features such as list users token, expire tokens
 * Allow user login from a certain number of browsers (re-use the same token)
 * User login history
-* Check and warn if the server is not running as HTTP**S**, this whole thing hinges on this
 
 ##  Dependencies
 

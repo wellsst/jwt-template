@@ -1,3 +1,5 @@
+<div *ngIf="message" class="alert alert-danger">{{message}}</div>
+
 <form (ngSubmit)="signupRequest()" #signupForm="ngForm" *ngIf="!challengeId">
 
   <div class="form-group form-inline">
@@ -5,7 +7,7 @@
     <input type="email" name="email" id="email" [(ngModel)]="emailAddress" required ngModel email
            placeholder="Enter your email address to register" size="35">
     &nbsp;
-    <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Register</button>
+    <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid || loading">Register</button>
   </div>
 </form>
 

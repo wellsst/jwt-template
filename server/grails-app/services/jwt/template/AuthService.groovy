@@ -14,7 +14,7 @@ class AuthService extends BaseService {
     EmailService emailService
 
     /* User wants to signup with the service, we gen a short lived key and send an email */
-    def signupRequest(String userEmail) {
+    def signupRequest(String userEmail, String remoteAddr) {
         // Lookup user?
         User user = User.findByUsername(userEmail)
         if (user) {
@@ -33,6 +33,7 @@ class AuthService extends BaseService {
         registrationRequest.requestId = UUID.randomUUID() as String
         registrationRequest.challengeId = RegistrationRequest.generateChallengeId(getAppConfigValue("jwt.challengeKeyLength", 4) as Integer)
         registrationRequest.user = user
+        registrationRequest.requestRemoteAddr = remoteAddr
         registrationRequest.save(flush: true)
         user.registrationRequest = registrationRequest
 
@@ -91,6 +92,7 @@ class AuthService extends BaseService {
         }
     }
 
+    @Deprecated
     def loginFromJWT(String token) {
         /*grailsApplication.config.getProperty('jwtKey')
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256)*/
@@ -115,27 +117,4 @@ class AuthService extends BaseService {
             throw new AuthException()
         }
     }
-
-    def login(String userEmail, String loginRequest) throws AuthException {
-        def query = User.where {
-            username == username &&
-                    registrationRequest.requestId == loginRequest
-        }
-        def user = query.find()
-        if (user) {
-            def token = UUID.randomUUID().toString()
-            // todo: create a real full JWT loginToken
-            user.loginToken = token
-            user.save()
-            log.info("User logged in ${user}")
-            user
-        }
-        /* TODO: Check for expired, locked etc */
-        else {
-            def msg = "User login attempt ${userEmail} or no login loginToken found, but user not found, users are: ${User.list(max: 10)}"
-            log.warn(msg)
-            throw new AuthException(msg)
-        }
-    }
-
 }

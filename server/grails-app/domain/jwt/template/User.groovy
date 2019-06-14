@@ -35,7 +35,11 @@ class User {
     static constraints = {
         username email: true, nullable: false, blank: false, unique: true
         loginToken nullable: true
-        registrationRequest nullable: true //, unique: true
+        registrationRequest nullable: true
+    }
+
+    static mapping = {
+        username index: "idx_username"
     }
 
     @Override

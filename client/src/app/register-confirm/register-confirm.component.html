@@ -7,7 +7,7 @@
     <input type="challengeId" name="challengeId" id="challengeId" [(ngModel)]="challengeId" required ngModel challengeId
            placeholder="ChallengeId" size="10">
     &nbsp;
-    <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Finish</button>
+    <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid || loading">Finish</button>
   </div>
 </form>
 

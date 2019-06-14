@@ -13,11 +13,18 @@ class RegistrationRequest {
     */
     String challengeId
     Date dateCreated
+    String requestRemoteAddr
 
     static belongsTo = [user: User]
 
     static constraints = {
         challengeId nullable: true, blank: false
+    }
+
+    static mapping = {
+        requestRemoteAddr index: "idx_remote_addr"
+        requestId index: "idx_requestId,idx_requestId_challengeId"
+        challengeId index: "idx_requestId_challengeId"
     }
 
     static String generateChallengeId(int nrChars) {

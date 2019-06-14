@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus
 class LoginController extends BaseController {
     static responseFormats = ['json', 'xml']
     String serverURL = grailsApplication.config.getProperty("grails.serverURL")
-    def mailService
     AuthService authService
 
     def index() {}
@@ -36,13 +35,19 @@ class LoginController extends BaseController {
     /* User has requested to start the registration process */
 
     def registerRequest() {
+        String remoteAddr = request.remoteAddr
         String emailAddress = request.JSON.emailAddress
         log.info "registerRequest: ${emailAddress}"
         try {
-            User user = authService.signupRequest(emailAddress)
-            int cleanupOlderThan = authService.getAppConfigValue('cleanupRequestsOlderThanMinutes', 15) as int
-            render([challengeId: user.registrationRequest.challengeId, cleanupOlderThan: cleanupOlderThan] as JSON)
-            //respond cleanupOlderThan, status: HttpStatus.OK
+            int requestLimit = authService.getAppConfigValue('maxRequestsPerRemoteAddr', 3) as int
+            if (RegistrationRequest.countByRequestRemoteAddr(remoteAddr) < requestLimit) {
+                User user = authService.signupRequest(emailAddress, remoteAddr)
+                int cleanupOlderThan = authService.getAppConfigValue('cleanupRequestsOlderThanMinutes', 15) as int
+                render([challengeId: user.registrationRequest.challengeId, cleanupOlderThan: cleanupOlderThan] as JSON)
+                //respond cleanupOlderThan, status: HttpStatus.OK
+            } else {
+                render text: "Too many requests from this address", status: HttpStatus.TOO_MANY_REQUESTS
+            }
         } catch (all) {
             all.printStackTrace()
             respond status: HttpStatus.UNAUTHORIZED
@@ -93,6 +98,7 @@ class LoginController extends BaseController {
         }
     }
 
+    @Deprecated
     def loginWithJWT() {
         String jwtToken = request.JSON.jwtToken
         String email = request.JSON.username

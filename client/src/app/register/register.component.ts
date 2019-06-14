@@ -16,6 +16,8 @@ export class RegisterComponent implements OnInit {
   challengeId: string = '';
   cleanupOlderThan: string = '';
 
+  message: string;
+
   constructor(
     private router: Router,
     private authenticationService: AuthService) {
@@ -24,10 +26,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     // reset login status
     this.authenticationService.logout();
-  }
-
-  login() {
-    this.loading = true;
   }
 
   signupRequest() {
@@ -41,8 +39,9 @@ export class RegisterComponent implements OnInit {
         this.cleanupOlderThan = result.cleanupOlderThan;
         // this.router.navigate(['/register-email-sent']);
       }, error => {
+        console.log(error );
+        this.message = error;
         this.loading = false;
-        console.log(error);
       });
   }
 }

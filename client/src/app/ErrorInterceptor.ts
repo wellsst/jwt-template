@@ -33,7 +33,11 @@ export class ErrorInterceptor implements HttpInterceptor {
             errorMessage = `Error: ${error.error.message}`;
           } else {
             // server-side error
-            errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.message}`;
+            let serverMsg = error.error.message;
+            if (!serverMsg) {
+              serverMsg = error.error;
+            }
+            errorMessage = `Error Code: ${error.status}\nMessage: ${serverMsg}`;
           }
           console.log(errorMessage);
           return throwError(errorMessage);
