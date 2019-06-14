@@ -28,10 +28,8 @@ Consider running a local mail server such as https://mailslurper.com or point to
 
 ## TODO
 
-* Block/throttle too many multiple requests for a token, you cant spam an email address for requests.
 * Improve unit tests on client and server
 * Add admin type/util features such as list users token, expire tokens
-* Allow user login from a certain number of browsers (re-use the same token)
 * User login history
 
 ##  Dependencies
