@@ -91,7 +91,7 @@ class LoginController extends BaseController {
             def token = ["jwt": jwtToken]
             respond token
         } catch (all) {
-            // all.printStackTrace()
+            all.printStackTrace()
             log.error all.message
             def error = [message: all.message]
             render error as JSON, status: HttpStatus.BAD_REQUEST
