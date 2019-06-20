@@ -2,6 +2,8 @@ package jwt.template
 
 import auth.AuthException
 import grails.gorm.transactions.Transactional
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Jws
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -14,6 +16,7 @@ class AuthService extends BaseService {
     EmailService emailService
 
     /* User wants to signup with the service, we gen a short lived key and send an email */
+
     def signupRequest(String userEmail, String remoteAddr) {
         // Lookup user?
         User user = User.findByUsername(userEmail)
@@ -55,17 +58,27 @@ class AuthService extends BaseService {
         User requestingUser = registrationRequest.user// User.findByRegistrationRequest(registrationRequest)
 
         SecretKey key = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes)
-        String jwt = Jwts.builder().
+
+        // Create a signed JWT - a JWS
+        def now = new Date()
+        String jws = Jwts.builder().
                 setIssuer(getAppConfigValue("jwt.issuer", "jwt-template") as String).
                 setSubject(requestingUser.username).
-                setIssuedAt(new Date()).
-                setExpiration(new Date() + (getAppConfigValue("jwt.daysToExpire", 365) as Integer)).
+                setIssuedAt(now).
+                setNotBefore(now).
+                setExpiration(now + (getAppConfigValue("jwt.daysToExpire", 365) as Integer)).
                 signWith(key).compact()
-        requestingUser.loginToken = jwt
-        //registrationRequest.removeFromUser()
-        //requestingUser.registrationRequest.delete()
+
+        // todo: would setting the ID, saving it and rechecking on each request add a layer of security?
+        // like: .setId(UUID.randomUUID()) and using as a nonce
+        // https://tools.ietf.org/html/rfc7519#section-4.1.7 says:
+        // 'The "jti" claim can be used to prevent the JWT from being replayed'
+        // So I'm thinking no, in this case the email will prevent the replay
+        //  or will it?  https://en.wikipedia.org/wiki/Replay_attack
+
+        requestingUser.loginToken = jws
         requestingUser.save(flush: true)
-        jwt
+        jws
     }
 
     /* User has clicked on the email link */
@@ -92,20 +105,31 @@ class AuthService extends BaseService {
         }
     }
 
-    @Deprecated
     def loginFromJWT(String token) {
-        /*grailsApplication.config.getProperty('jwtKey')
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256)*/
-        SecretKey key = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes);
-        /*if (Jwts.parser().setSigningKey(key).parseClaimsJws(loginToken).getBody().getSubject().equals(email)) {
+        SecretKey serverKey = Keys.hmacShaKeyFor((getAppConfigValue('jwt.serverKey', '') as String).bytes)
+
+        // No point in checking the email that the browser request would have provided anyway (same source of data)
+        // If the JWT was signed by us and the connection is secure the email in the token will be trustworthy
+        /*if (Jwts.parser().setSigningKey(serverKey).parseClaimsJws(loginToken).getBody().getSubject().equals(email)) {
             return
         } else {
             throw new AuthException()
         }*/
 
         try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(serverKey).parseClaimsJws(token)
 
-            def claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            // Check for claims
+            if (new Date() > claims.body.getExpiration()) {
+                throw new AuthException("Token expired on: ${claims.body.getExpiration()}")
+            }
+            if (claims.body.getNotBefore() < new Date()) {
+                throw new AuthException("Token is not authorized for use until: ${claims.body.getNotBefore()}")
+            }
+            if (claims.body.getIssuer() != getAppConfigValue("jwt.issuer", "jwt-template") as String) {
+                throw new AuthException("Invalid issuer: ${claims.body.getIssuer()}")
+            }
+
             //OK, we can trust this JWT
             String username = claims.getBody().getSubject()
             User user = User.findByUsername(username, [cache: true])
@@ -114,7 +138,7 @@ class AuthService extends BaseService {
             }
             return user
         } catch (JwtException e) {
-            throw new AuthException()
+            throw new AuthException(e.message, e)
         }
     }
 }

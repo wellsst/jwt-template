@@ -35,6 +35,10 @@ class UtilController extends BaseController {
 
     def genkey() {
         log.info("Generate secret key...")
+        // note: You can dial up the keys by selecting different algorithms, a PS512 elliptic curve would be super
+        // safe but you require JDK 11 or a compatible JCA Provider (like BouncyCastle) in the runtime classpath
+        // see: https://github.com/jwtk/jjwt - Creating Safe Keys
+        // but also check first the front-end can handle these algs as well!
         def keyString = Keys.secretKeyFor(SignatureAlgorithm.HS256).toString()
         log.info(keyString)
         render keyString
