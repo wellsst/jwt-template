@@ -62,7 +62,7 @@ class AuthService extends BaseService {
         // Create a signed JWT - a JWS
         def now = new Date()
         String jws = Jwts.builder().
-                setIssuer(getAppConfigValue("jwt.issuer", "jwt-template") as String).
+                setIssuer(getAppConfigValue("jwt.issuer", "https://github.com/wellsst/jwt-template") as String).
                 setSubject(requestingUser.username).
                 setIssuedAt(now).
                 setNotBefore(now).
@@ -126,7 +126,7 @@ class AuthService extends BaseService {
             if (claims.body.getNotBefore() < new Date()) {
                 throw new AuthException("Token is not authorized for use until: ${claims.body.getNotBefore()}")
             }
-            if (claims.body.getIssuer() != getAppConfigValue("jwt.issuer", "jwt-template") as String) {
+            if (claims.body.getIssuer() != getAppConfigValue("jwt.issuer", "https://github.com/wellsst/jwt-template") as String) {
                 throw new AuthException("Invalid issuer: ${claims.body.getIssuer()}")
             }
 

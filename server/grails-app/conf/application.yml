@@ -88,7 +88,7 @@ dataSource:
 app:
     name: JWT Template
     jwt:
-        issuer: jwt-template
+        issuer: https://github.com/wellsst/jwt-template
         daysToExpire: 365
         challengeKeyLength: 4
         key: NDY2ZGI4N2MtYWMxYi00ZDA2LWFjYjMtNzEzNWQ2MGVmODM1
