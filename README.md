@@ -5,17 +5,24 @@ JWT by example/starter template with Grails, Angular
 
 JSON Web Tokens can provide a simple form of authentication that is an alternative to passwords, 2FA or using an OpenAuth provider.
 
-https://codeburst.io/jwt-to-authenticate-servers-apis-c6e179aa8c4e
+The method of authorisation proposed by this piece of work is quite simple and is based on the ideas of others.  
+
+It has a particular use-case and will not suit all scenarios.  Typically it would be suitable for general scale web based systems.
+A user needs to register to use the system using this by entering their email, after a short process they will be provided a token for future authentication.
+Thus it may not suit for example in large scale enterprise systems, in this case you could still use JWT but with something like an OAuth authorization server such as by Auth0.
+The nice advantage with this proposal is simplicity (no passwords), thus also making it easier to manage.
 
 Advantages:
 * Simplicity
-* User does not write down or store or forget yet another password - cumbersome and unsafe* 
+* User does not write down or store or forget yet another password - cumbersome and unsafe
+* Password re-use is evil
 * Less vulnerable to keystroke loggers
 * Can hold any information, just don't make it sensitive unless using JSON Web Encryption (JWE).
 * Flexible and interoperable - JSON based
-* Tokens can contain other tokens - a token chain
+* Tokens can contain other tokens - a token chain (my thought only, I have seen anyone mention this yet)
 * JWT can be can be cryptographically signed and encrypted to prevent tampering on the client side
 * Server side can verify JWT without needing to store data (typically you would, depending on use-case)
+* More compact and easier to work with than SAML (JSON vs XML)
 
 ## Current framework versions used
 
@@ -51,6 +58,8 @@ Check:
 3. 
 
 Note: Stormpath recommends that you store your JWT in cookies for web applications, because of the additional security they provide, and the simplicity of protecting against CSRF with modern web frameworks. HTML5 Web Storage is vulnerable to XSS, has a larger attack surface area, and can impact all application users on a successful attack.
+
+"Whoever reads Web Storage and uses it must do their due diligence to ensure they always send the JWT over HTTPS and never HTTP."
 
 ## Getting started
 
@@ -122,6 +131,7 @@ On the server you can currently see this via the graphql browser, it looks like:
 
 ## TODO
 
+* Server should also warn of non-secure connection when exchanging JWT
 * Improve unit tests on client and server
 * Add admin type/util features such as list users token, expire tokens
 * User login history
@@ -145,7 +155,7 @@ On the server you can currently see this via the graphql browser, it looks like:
 * [https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial](https://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial)
 * [https://medium.com/@ryanchenkie_40935/angular-authentication-using-the-http-client-and-http-interceptors-2f9d1540eb8](https://medium.com/@ryanchenkie_40935/angular-authentication-using-the-http-client-and-http-interceptors-2f9d1540eb8)
 * [https://theinfogrid.com/tech/developers/angular/refreshing-authorization-tokens-angular-6/](https://theinfogrid.com/tech/developers/angular/refreshing-authorization-tokens-angular-6/)
-
+* [https://codeburst.io/jwt-to-authenticate-servers-apis-c6e179aa8c4e](https://codeburst.io/jwt-to-authenticate-servers-apis-c6e179aa8c4e)
 
 
 
