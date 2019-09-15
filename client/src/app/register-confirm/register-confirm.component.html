@@ -1,6 +1,6 @@
 <div *ngIf="message" class="alert alert-danger">{{message}}</div>
 
-<form *ngIf="!jwt"(ngSubmit)="registerConfirm()" #signupForm="ngForm">
+<form *ngIf="!jwt" (ngSubmit)="registerConfirm()" #signupForm="ngForm">
 
   <div class="form-group form-inline">
     <p>Enter the challengeId to finish registration</p>

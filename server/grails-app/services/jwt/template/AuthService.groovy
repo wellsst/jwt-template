@@ -106,7 +106,7 @@ class AuthService extends BaseService {
     }
 
     def loginFromJWT(String token) {
-        SecretKey serverKey = Keys.hmacShaKeyFor((getAppConfigValue('jwt.serverKey', '') as String).bytes)
+        SecretKey serverKey = Keys.hmacShaKeyFor((getAppConfigValue('jwt.key', '') as String).bytes)
 
         // No point in checking the email that the browser request would have provided anyway (same source of data)
         // If the JWT was signed by us and the connection is secure the email in the token will be trustworthy
@@ -123,7 +123,7 @@ class AuthService extends BaseService {
             if (new Date() > claims.body.getExpiration()) {
                 throw new AuthException("Token expired on: ${claims.body.getExpiration()}")
             }
-            if (claims.body.getNotBefore() < new Date()) {
+            if (claims.body.getNotBefore() > new Date()) {
                 throw new AuthException("Token is not authorized for use until: ${claims.body.getNotBefore()}")
             }
             if (claims.body.getIssuer() != getAppConfigValue("jwt.issuer", "https://github.com/wellsst/jwt-template") as String) {

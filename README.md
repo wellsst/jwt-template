@@ -17,6 +17,7 @@ Advantages:
 * User does not write down or store or forget yet another password - cumbersome and unsafe
 * Password re-use is evil
 * Less vulnerable to keystroke loggers
+* Less vulnerable to phishing attacks
 * Can hold any information, just don't make it sensitive unless using JSON Web Encryption (JWE).
 * Flexible and interoperable - JSON based
 * Tokens can contain other tokens - a token chain (my thought only, I have seen anyone mention this yet)
@@ -55,7 +56,7 @@ Currently this stores in localStorage this is vulnerable to XSS unless running h
 Check:
 1. Your signing algorithm is strong enough for your purposes
 2. The signing key is stored safely, at least needing only a specific user that can read the contents, or store this in a different external location that is locked down and/or encrypted, currently this is config 'app.jwt.key' in application.yml
-3. 
+
 
 Note: Stormpath recommends that you store your JWT in cookies for web applications, because of the additional security they provide, and the simplicity of protecting against CSRF with modern web frameworks. HTML5 Web Storage is vulnerable to XSS, has a larger attack surface area, and can impact all application users on a successful attack.
 
@@ -132,6 +133,7 @@ On the server you can currently see this via the graphql browser, it looks like:
 ## TODO
 
 * Server should also warn of non-secure connection when exchanging JWT
+* User can expire their own tokens
 * Improve unit tests on client and server
 * Add admin type/util features such as list users token, expire tokens
 * User login history
